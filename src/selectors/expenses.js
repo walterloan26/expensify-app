@@ -1,25 +1,20 @@
-import React from 'react';
-import { BrowserRouter, Route, Switch, Link, NavLink } from 'react-router-dom';
-import ExpenseDashboardPage from '../components/ExpenseDashboardPage';
-import AddExpensePage from '../components/AddExpensePage';
-import EditExpensePage from '../components/EditExpensePage';
-import HelpPage from '../components/HelpPage';
-import NotFoundPage from '../components/NotFoundPage';
-import Header from '../components/Header';
+import moment from 'moment';
 
-const AppRouter = () => (
-  <BrowserRouter>
-    <div>
-      <Header />
-      <Switch>
-        <Route path="/" component={ExpenseDashboardPage} exact={true} />
-        <Route path="/create" component={AddExpensePage} />
-        <Route path="/edit/:id" component={EditExpensePage} />
-        <Route path="/help" component={HelpPage} />
-        <Route component={NotFoundPage} />
-      </Switch>
-    </div>
-  </BrowserRouter>
-);
+// Get visible expenses
 
-export default AppRouter;
+export default (expenses, { text, sortBy, startDate, endDate }) => {
+  return expenses.filter((expense) => {
+    const createdAtMoment = moment(expense.createdAt);
+    const startDateMatch = startDate ? startDate.isSameOrBefore(createdAtMoment, 'day') : true;
+    const endDateMatch = endDate ? endDate.isSameOrAfter(createdAtMoment, 'day') : true;
+    const textMatch = expense.description.toLowerCase().includes(text.toLowerCase());
+
+    return startDateMatch && endDateMatch && textMatch;
+  }).sort((a, b) => {
+    if (sortBy === 'date') {
+      return a.createdAt < b.createdAt ? 1 : -1;
+    } else if (sortBy === 'amount') {
+      return a.amount < b.amount ? 1 : -1;
+    }
+  });
+};
