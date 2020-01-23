@@ -16,18 +16,6 @@ const firebaseConfig = {
 
   const database = firebase.database();
 
-export { firebase, database as default } 
+  const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 
-
-
-// database.ref('expenses').on('child_removed', (snapshot) => {
-//     console.log(snapshot.key, snapshot.val());
-// })
-
-// database.ref('expenses').on('child_changed', (snapshot) => {
-//     console.log(snapshot.key, snapshot.val());
-// })
-
-// database.ref('expenses').on('child_added', (snapshot) => {
-//     console.log(snapshot.key, snapshot.val());
-// })
+export { firebase, googleAuthProvider ,database as default } 
